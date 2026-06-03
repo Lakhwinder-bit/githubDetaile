@@ -6,7 +6,7 @@ const db = require('./utils/databaseUtils')
 const app = express();
 
 
-// IMPORTANT
+// IMPORTANT notes
 app.use(express.json());
 app.use("/", profileRouets)
 
