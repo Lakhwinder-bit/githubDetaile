@@ -4,7 +4,11 @@ const profileRouets = require('./routes/profileRoutes')
 const PORT = process.env.PORT
 const db = require('./utils/databaseUtils')
 const app = express();
+const db = require("./utils/databaseUtils");
 
+db.getConnection()
+  .then(() => console.log("Database Connected"))
+  .catch(err => console.log(err));
 
 // IMPORTANT notes
 app.use(express.json());
