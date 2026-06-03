@@ -1,9 +1,11 @@
 const axios = require("axios");
 const db = require("../utils/databaseUtils");
-const { setUser } = require("../models/githubModel");
-const { sendData } = require("../models/githubModel");
-const { userExists} = require("../models/githubModel");
-const { deleteUsers } = require("../models/githubModel");
+const {
+  setUser,
+  sendData,
+  userExists,
+  deleteUsers,
+} = require("../models/githubmodel");
 
 exports.anylizeGithub = async (req, res) => {
   try {
@@ -33,8 +35,7 @@ exports.anylizeGithub = async (req, res) => {
       totalForks += repo.forks_count;
 
       if (repo.language) {
-        languages[repo.language] =
-          (languages[repo.language] || 0) + 1;
+        languages[repo.language] = (languages[repo.language] || 0) + 1;
       }
     }
 
@@ -50,13 +51,13 @@ exports.anylizeGithub = async (req, res) => {
 
     const exists = await userExists(username);
 
-if (exists) {
-  return res.status(409).json({
-    success: false,
-    message: "User already exists"
-  });
-}
-     await setUser({
+    if (exists) {
+      return res.status(409).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
+    await setUser({
       username: user.login,
       name: user.name,
       bio: user.bio,
@@ -94,44 +95,42 @@ if (exists) {
   }
 };
 
-exports.giveData = async(req, res)=>{
-try {
-  const resultUser = await sendData();
-if(!resultUser || resultUser.length === 0){
-  return res.status(400).json({
-    success:false,
-    message:"Data is not found try again..."
-  })
-}else{
-  res.status(200).json({
-    success:true,
-    message:"THis is sucssfully working...",
-    data: resultUser,
-  })
-}
+exports.giveData = async (req, res) => {
+  try {
+    const resultUser = await sendData();
+    if (!resultUser || resultUser.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Data is not found try again...",
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: "THis is sucssfully working...",
+        data: resultUser,
+      });
+    }
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: ("This is not working api", error),
+    });
+  }
+};
 
-} catch (error) {
-  return res.status(400).json({
-    success:false,
-    message:("This is not working api",error)
-  })
-}
-}
-
-exports.deleteData = async(req, res)=>{
+exports.deleteData = async (req, res) => {
   try {
     await deleteUsers();
     return res.status(200).json({
-      success:true,
-      message:"user data deleted succfully..."
-    })
-    
+      success: true,
+      message: "user data deleted succfully...",
+    });
   } catch (error) {
-    console.error(error)
-    
+    console.error(error);
+
     return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
-}
+};
