@@ -1,33 +1,66 @@
-// const db = require("../utils/databaseUtils");
+const db = require('../utils/databaseUtils');
 
-// exports.saveProfile = async (data) => {
-//   return db.execute(
-//     `INSERT INTO githubuserdetails
-//     (
-//       username,
-//       name,
-//       bio,
-//       avatar,
-//       profile_url,
-//       public_repos,
-//       total_start,
-//       total_forks,
-//       top_language,
-//        followers,
+exports.setUser = async (userData) => {
+  const {
+    username,
+    name,
+    bio,
+    avatar,
+    profile_url,
+    public_repos,
+    total_stars,
+    total_forks,
+    top_language,
+  } = userData;
 
-//     )
-//     VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
-//     [
-//       data.username,
-//       data.name,
-//       data.bio,
-//       data.avatar,
-//       data.profile_url,
-//       data.followers,
-//       data.public_repos,
-//       data.total_start,
-//       data.total_forks,
-//       data.top_language,
-//     ]
-//   );
-// };
+  const [result] = await db.execute(
+    `INSERT INTO githubuserdetails
+    (
+      username,
+      name,
+      bio,
+      avatar,
+      profile_url,
+      public_repos,
+      total_start,
+      total_forks,
+      top_language
+    )
+    VALUES (?,?,?,?,?,?,?,?,?)`,
+    [
+      username,
+      name,
+      bio,
+      avatar,
+      profile_url,
+      public_repos,
+      total_stars,
+      total_forks,
+      top_language,
+    ]
+  );
+
+  return result;
+};
+
+
+exports.sendData = async()=>{
+try {
+  const [rows] = await db.query('SELECT * FROM githubuserdetails')
+  return rows;
+} catch (error) {
+  console.error(error)
+  throw error
+}
+}
+exports.userExists = async (username) => {
+  // SELECT id FROM 
+  // githubuserdetails WHERE 
+  // username = 'Lakhwinder-bit' LIMIT 1;
+  const [rows] = await db.query(
+    "SELECT id FROM githubuserdetails WHERE username = ? LIMIT 1",
+    [username]
+  );
+
+  return rows.length > 0;
+};

@@ -1,5 +1,8 @@
 const axios = require("axios");
 const db = require("../utils/databaseUtils");
+const { setUser } = require("../models/githubModel");
+const { sendData } = require("../models/githubModel");
+const { userExists} = require("../models/githubModel");
 
 exports.anylizeGithub = async (req, res) => {
   try {
@@ -44,33 +47,25 @@ exports.anylizeGithub = async (req, res) => {
       }
     }
 
-    // Save directly in MySQL
-    await db.execute(
-      `INSERT INTO githubuserdetails
-      (
-        username,
-        name,
-        bio,
-        avatar,
-        profile_url,
-        public_repos,
-        total_start,
-        total_forks,
-        top_language
-      )
-      VALUES (?,?,?,?,?,?,?,?,?)`,
-      [
-        user.login,
-        user.name,
-        user.bio,
-        user.avatar_url,
-        user.html_url,
-        user.public_repos,
-        totalStars,
-        totalForks,
-        topLanguage,
-      ]
-    );
+    const exists = await userExists(username);
+
+if (exists) {
+  return res.status(409).json({
+    success: false,
+    message: "User already exists"
+  });
+}
+     await setUser({
+      username: user.login,
+      name: user.name,
+      bio: user.bio,
+      avatar: user.avatar_url,
+      profile_url: user.html_url,
+      public_repos: user.public_repos,
+      total_stars: totalStars,
+      total_forks: totalForks,
+      top_language: topLanguage,
+    });
 
     return res.status(200).json({
       success: true,
@@ -94,3 +89,27 @@ exports.anylizeGithub = async (req, res) => {
     });
   }
 };
+
+exports.giveData = async(req, res)=>{
+try {
+  const resultUser = await sendData();
+if(!resultUser || resultUser.length === 0){
+  return res.status(400).json({
+    success:false,
+    message:"Data is not found try again..."
+  })
+}else{
+  res.status(200).json({
+    success:true,
+    message:"THis is sucssfully working...",
+    data: resultUser,
+  })
+}
+
+} catch (error) {
+  return res.status(400).json({
+    success:false,
+    message:("This is not working api",error)
+  })
+}
+}
