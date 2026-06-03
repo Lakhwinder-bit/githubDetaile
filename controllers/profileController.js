@@ -3,6 +3,7 @@ const db = require("../utils/databaseUtils");
 const { setUser } = require("../models/githubModel");
 const { sendData } = require("../models/githubModel");
 const { userExists} = require("../models/githubModel");
+const { deleteUsers } = require("../models/githubModel");
 
 exports.anylizeGithub = async (req, res) => {
   try {
@@ -73,8 +74,11 @@ if (exists) {
       userData: {
         username: user.login,
         name: user.name,
+        bio: user.bio,
         followers: user.followers,
         publicRepos: user.public_repos,
+        avatar: user.avatar_url,
+        profile_url: user.html_url,
         totalStars,
         totalForks,
         topLanguage,
@@ -112,4 +116,22 @@ if(!resultUser || resultUser.length === 0){
     message:("This is not working api",error)
   })
 }
+}
+
+exports.deleteData = async(req, res)=>{
+  try {
+    await deleteUsers();
+    return res.status(200).json({
+      success:true,
+      message:"user data deleted succfully..."
+    })
+    
+  } catch (error) {
+    console.error(error)
+    
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 }

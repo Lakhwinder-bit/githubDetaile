@@ -64,3 +64,11 @@ exports.userExists = async (username) => {
 
   return rows.length > 0;
 };
+
+exports.deleteUsers = async()=>{
+  const result = db.query(
+    "TRUNCATE TABLE githubdetails.githubuserdetails"
+  )
+  return result;
+
+}
