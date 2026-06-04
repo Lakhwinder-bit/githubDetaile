@@ -67,7 +67,7 @@ exports.userExists = async (username) => {
 
 exports.deleteUsers = async()=>{
   const result = db.query(
-    "TRUNCATE TABLE githubdetails.githubuserdetails"
+    "TRUNCATE TABLE githubuserdetails"
   )
   return result;
 
