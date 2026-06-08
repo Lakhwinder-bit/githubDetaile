@@ -8,9 +8,10 @@ const {
 } = require("../models/githubmodel");
 
 exports.anylizeGithub = async (req, res) => {
+  console.log(req.url);
   try {
     const { username } = req.body;
-
+  console.log("Username:", username);
     if (!username) {
       return res.status(400).json({
         success: false,
@@ -68,23 +69,23 @@ exports.anylizeGithub = async (req, res) => {
       total_forks: totalForks,
       top_language: topLanguage,
     });
-
-    return res.status(200).json({
-      success: true,
-      message: "User fetched and saved successfully",
-      userData: {
-        username: user.login,
-        name: user.name,
-        bio: user.bio,
-        followers: user.followers,
-        publicRepos: user.public_repos,
-        avatar: user.avatar_url,
-        profile_url: user.html_url,
-        totalStars,
-        totalForks,
-        topLanguage,
-      },
-    });
+return res.redirect("/data");
+    // return res.status(200).json({
+    //   success: true,
+    //   message: "User fetched and saved successfully",
+    //   userData: {
+    //     username: user.login,
+    //     name: user.name,
+    //     bio: user.bio,
+    //     followers: user.followers,
+    //     publicRepos: user.public_repos,
+    //     avatar: user.avatar_url,
+    //     profile_url: user.html_url,
+    //     totalStars,
+    //     totalForks,
+    //     topLanguage,
+    //   },
+    // });
   } catch (error) {
     console.error(error);
 
@@ -98,23 +99,41 @@ exports.anylizeGithub = async (req, res) => {
 exports.giveData = async (req, res) => {
   try {
     const resultUser = await sendData();
+
     if (!resultUser || resultUser.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Data is not found try again...",
-      });
-    } else {
-      res.status(200).json({
-        success: true,
-        message: "THis is sucssfully working...",
-        data: resultUser,
+      return res.render("data", {
+        data: [],
       });
     }
-  } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message: ("This is not working api", error),
+
+    const filter = req.query.filter;
+
+    let users = resultUser;
+
+    if (filter === "stars") {
+      const topStarsUser = resultUser.reduce((max, user) =>
+        user.total_stars > max.total_stars ? user : max
+      );
+
+      users = [topStarsUser];
+    }
+
+    if (filter === "repos") {
+      const topReposUser = resultUser.reduce((max, user) =>
+        user.public_repos > max.public_repos ? user : max
+      );
+
+      users = [topReposUser];
+    }
+
+    res.render("data", {
+      data: users,
     });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).send(error.message);
   }
 };
 
@@ -134,3 +153,14 @@ exports.deleteData = async (req, res) => {
     });
   }
 };
+
+
+exports.topdata = async(req,res)=>{
+  try {
+    
+  } catch (error) {
+    res.status(400).json({
+      message:error
+    })
+  }
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Analytics</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+ <%- include("componets/header") %>
+
+  <!-- Hero Section -->
+  <section class="hero">
+
+    <span class="badge">🚀 GitHub Profile Analyzer</span>
+
+    <h1>
+      Analyze Any GitHub
+      <span>Profile</span> Instantly
+    </h1>
+
+    <p>
+      Enter any GitHub username and instantly view profile analytics,
+      repositories, stars, forks, languages and more.
+    </p>
+
+    <form  id="githubForm" action="/home" method="POST" class="search-box">
+
+      <input
+        type="text"
+        name="username"
+        value=""
+        placeholder="Enter GitHub Username"
+        required
+      >
+
+      <button type="submit">
+        Analyze Profile
+      </button>
+
+    </form>
+
+  </section>
+
+  <!-- Empty State -->
+  <section class="empty-state">
+    <h2>Search a GitHub User</h2>
+    <p>Your profile analytics will appear here.</p>
+  </section>
+
+</body>
+</html>

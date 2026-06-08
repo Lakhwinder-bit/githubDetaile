@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GitHub Analytics</title>
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+ <%- include("componets/header") %>
+<div class="container">
+
+
+    <!-- Filter Tabs -->
+
+    <div class="filter-tabs">
+
+        <a href="/data" class="tab-btn">
+            All Users
+        </a>
+
+        <a href="/data?filter=stars" class="tab-btn">
+            Top Stars
+        </a>
+
+        <a href="/data?filter=repos" class="tab-btn">
+            Top Repositories
+        </a>
+
+    </div>
+
+    <!-- Cards -->
+
+    <div class="card-container">
+
+        <% data.forEach(user => { %>
+
+        <div class="card">
+
+            <div class="card-header"></div>
+
+            <div class="profile">
+
+                <img
+                    src="<%= user.avatar %>"
+                    alt=""
+                    class="avatar"
+                >
+
+                <a
+                    href="<%= user.profile_url %>"
+                    target="_blank"
+                    class="profile-btn"
+                >
+                    Profile
+                </a>
+
+            </div>
+
+            <div class="card-body">
+
+                <h2>
+                    <%= user.name || "No Name" %>
+                </h2>
+
+                <p class="username">
+                    @<%= user.username %>
+                </p>
+
+                <p class="bio">
+                    <%= user.bio || "No Bio Available" %>
+                </p>
+
+                <div class="stats">
+
+                    <div class="stat-box">
+                        <h3>
+                            <%= user.public_repos %>
+                        </h3>
+
+                        <span>Repos</span>
+                    </div>
+
+                    <div class="stat-box">
+                        <h3>
+                            <%= user.total_stars %>
+                        </h3>
+
+                        <span>Stars</span>
+                    </div>
+
+                    <div class="stat-box">
+                        <h3>
+                            <%= user.total_forks %>
+                        </h3>
+
+                        <span>Forks</span>
+                    </div>
+
+                </div>
+
+                <div class="language">
+
+                    <span>
+                        🚀 <%= user.top_language %>
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <% }) %>
+
+    </div>
+
+</div>
+
+</body>
+</html>
