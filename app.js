@@ -19,12 +19,12 @@ db.getConnection()
   res.render("home");
 });
 
-app.use((req, res) => {
-    res.status(404).render("error", {
-        statusCode: 404,
-        message: "Page Not Found"
-    });
-});
+// app.use((req, res) => {
+//     res.status(404).render("error", {
+//         statusCode: 404,
+//         message: "Page Not Found"
+//     });
+// });
 app.use(express.urlencoded({ extended: true }));
 
 // IMPORTANT notes

@@ -6,6 +6,7 @@ const {
   userExists,
   deleteUsers,
 } = require("../models/githubmodel");
+const { render } = require("ejs");
 
 exports.anylizeGithub = async (req, res) => {
   console.log(req.url);
@@ -106,6 +107,28 @@ exports.giveData = async (req, res) => {
       });
     }
 
+    const usersWithGrade = resultUser.map((user) => {
+  const score =
+    (user.public_repos || 0) * 2 +
+    (user.total_stars || 0) * 5 +
+    (user.total_forks || 0) * 3 +
+    (user.languages_count || 0) * 10;
+
+  let grade = "D";
+
+  if (score >= 500) grade = "A+";
+  else if (score >= 300) grade = "A";
+  else if (score >= 200) grade = "B";
+  else if (score >= 100) grade = "C";
+
+  return {
+    ...user,
+    score,
+    grade,
+  };
+});
+
+
     const filter = req.query.filter;
 
     let users = resultUser;
@@ -128,6 +151,7 @@ exports.giveData = async (req, res) => {
 
     res.render("data", {
       data: users,
+      
     });
 
   } catch (error) {
@@ -154,13 +178,3 @@ exports.deleteData = async (req, res) => {
   }
 };
 
-
-exports.topdata = async(req,res)=>{
-  try {
-    
-  } catch (error) {
-    res.status(400).json({
-      message:error
-    })
-  }
-}
